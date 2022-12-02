@@ -6,7 +6,7 @@ main() {
 	os=$(uname -s)
 	release=$(uname -r)
 	version="$os $release"
-	# In FreeBSD you can also do grep /etc/rc.conf | sed -e 's/hostname="//g;s/'
+	# In FreeBSD you can also use /etc/rc.conf'
 	host=$(uname -n)
 	arch=$(uname -m)
 	shell=$(ps -p $$ -ocomm=)
@@ -31,8 +31,11 @@ main() {
 	pkgs=
 	ctl_mem=
 	case $os in
-		Free*|Midnight*|DragonFly*)
+		Free*|DragonFly*)
 			pkgs=$(pkg list | wc -l | sed "s/[[:space:]]//g")
+		;;
+		Midnight*)
+			pkgs=$(mport list | wc -l | sed "s/[[:space:]]//g")
 		;;
 		Open*|Net*)
 			pkgs=$(pkg_info | wc -l | sed "s/[[:space:]]//g")
@@ -48,7 +51,7 @@ main() {
 	esac
 	mem=$((ctl_mem / 1048576))
 	loadavg=$(uptime | cut -d 'l' -f2 | sed -E "s/oad average|:|s://g;s/ //")
-	# You can also use grep boot log in FreeBSD. CPU: /var/run/dmesg.boot | sed)
+	# You can also use grep boot log in FreeBSD.
 	cpu=$(sysctl -n hw.model)
 	cores=$(sysctl -n hw.ncpu)
 	red="\033[0;91m"
