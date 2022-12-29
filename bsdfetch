@@ -14,7 +14,7 @@ main() {
 	boot_time=
 	case $os in
 		Free*|Midnight*|Dragon*)
-			boot_time=$(sysctl -n kern.boottime | awk '{printf $4}' | sed s/,//)
+			boot_time=$(sysctl -n kern.boottime | sed -E 's/.* sec = ([[:digit:]]+).*/\1/')
 		;;
 		Open*|Net*)
 			boot_time=$(sysctl -n kern.boottime)
@@ -32,7 +32,7 @@ main() {
 	ctl_mem=
 	case $os in
 		Free*|DragonFly*)
-			pkgs=$(pkg list | wc -l | sed "s/[[:space:]]//g")
+			pkgs=$(pkg info -q | wc -l | sed "s/[[:space:]]//g")
 		;;
 		Midnight*)
 			pkgs=$(mport list | wc -l | sed "s/[[:space:]]//g")
